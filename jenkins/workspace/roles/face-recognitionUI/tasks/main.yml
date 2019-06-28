@@ -1,0 +1,71 @@
+      - name: "Load  Variables"
+        include_vars:
+          file: "vars.yml"
+// file we have to create in vars directory
+
+      - name: iis stop
+        raw: "iisreset /stop"
+
+      - name: "Create Default Web Site"
+        win_iis_website:
+          name: "Default Web Site"
+          state: started
+          physical_path: "{{ wwwrootdir }}"
+          application_pool: DefaultAppPool
+
+
+
+
+      - name: "Check if WebApplication {{ virtualDirectory }} already exists"
+        win_iis_webapplication:
+          name: "{{ virtualDirectory }}"
+          site: "{{ websitename }}"
+        register: applicationExists
+        ignore_errors: yes
+
+
+
+      - name: "Delete Existing webapplication {{ virtualDirectory }}"
+        win_iis_webapplication:
+          name: "{{ virtualDirectory }}"
+          site: "{{ websitename }}"
+          state: absent
+        when: applicationExists is succeeded
+
+
+
+      - name: Delete  backUpDir
+        win_file:
+          path: C:\inetpub\wwwroot\face-recognitionUI
+          state: absent
+
+
+
+      - name: Download Artifact
+        win_get_url:
+          url: "{{ artifactRepo }}\\{{ zipfilename }}{{ version }}.zip"
+          dest: "{{ wwwrootdir }}\\{{ zipfilename }}{{ version}}.zip"
+          url_username: "{{ JFrogUser }}"
+          url_password: "{{ JFrogPassword }}"
+          timeout: 50
+          force: yes
+
+
+      - name: Unzip Artifact
+        win_unzip:
+          src: "{{ wwwrootdir }}\\{{ zipfilename }}{{ version }}.zip"
+          dest: "{{ wwwrootdir }}\\{{virtualDirectory}}"
+          delete_archive: yes
+
+
+
+      - name: Create Web Application
+        win_iis_webapplication:
+          name: "{{ virtualDirectory }}"
+          site: "{{ websitename }}"
+          state: present
+          application_pool: "{{ websitename }}"
+          physical_path: "{{ wwwrootdir }}\\{{ virtualDirectory }}"
+
+      - name: iis start
+        raw: "iisreset /start"

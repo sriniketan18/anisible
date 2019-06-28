@@ -1,0 +1,11 @@
+---
+artifactRepo:  http://10.112.75.104:8081/artifactory/face-recognitionUI
+// This is the repository url of jfrog artifactory in windows
+wwwrootdir:  C:\inetpub\wwwroot
+virtualDirectory: face-recognitionUI
+websitename: Default Web Site
+zipfilename: face-recognitionUI
+JFrogUser: admin
+// my jfrog username
+JFrogPassword: **********
+// my jfrog password

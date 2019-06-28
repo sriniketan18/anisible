@@ -1,0 +1,12 @@
+[winvan]
+10.112.75.142
+//ip address of the windows system
+[winvan:vars]
+ansible_user=ansible
+// the user that we have created in computer management
+ansible_password=*********
+// password of that user
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
+ansible_port=5986
+ansible_winrm_transport = ssl

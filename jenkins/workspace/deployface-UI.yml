@@ -1,0 +1,10 @@
+---
+ - name: "Deploy face-rec application"
+   hosts: all
+   gather_facts: false
+
+   tasks:
+     - name: Running face-rec Deployment
+       include_role:
+         name: face-recognitionUI
+// next in roles we have create a same directory as the name given above
